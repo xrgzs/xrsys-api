@@ -13,3 +13,5 @@
 [下载地址](https://url.xrgzs.top/xrsysapi)
 
 **警告：不支持单独使用，需要搭配osc.exe**
+
+> 图标来自：https://icons8.com/icons/fluency
