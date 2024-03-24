@@ -48,9 +48,9 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         tag_name: v${{ steps.generate_version.outputs.version }}
-        name: Release v${{ steps.generate_version.outputs.version }}
+        name: v${{ steps.generate_version.outputs.version }}
         draft: false
-        prerelease: false
+        prerelease: true
         generate_release_notes: true
         token: ${{ secrets.MY_TOKEN }}
         files: api.exe
