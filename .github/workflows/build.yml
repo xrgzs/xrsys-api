@@ -18,6 +18,7 @@ jobs:
       id: generate_version
       shell: pwsh
       run: |
+        Set-TimeZone -Id "China Standard Time" -PassThru
         $date = Get-Date
         $year = $date.Year.ToString().Substring(2)
         $month = $date.Month.ToString("0")
