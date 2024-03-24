@@ -1,0 +1,52 @@
+name: Build
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Generate version based on current date and time
+      id: generate_version
+      shell: pwsh
+      run: |
+        $date = Get-Date
+        $year = $date.Year.ToString().Substring(2)
+        $month = $date.Month.ToString("00")
+        $day = $date.Day.ToString("00")
+        $hour = $date.Hour.ToString("00")
+        $minute = $date.Minute.ToString("00")
+        $version = "$year.$month.$day.$hour$minute"
+        echo "Version: $version"
+        echo $PSVersionTable
+        echo $GITHUB_OUTPUT
+        echo "version=$version" >> $env:GITHUB_OUTPUT
+        
+    - name: Get Bat To Exe Converter
+      shell: cmd
+      run: |
+        curl.exe 4.ipw.cn
+        curl.exe -vL "https://file.uhsea.com/2403/ac679f3b02637fd3b52c25cdfd9e360174.exe" -o "b2e.exe"
+        
+    - name: Convert BAT to EXE
+      shell: cmd
+      env:
+        GITHUB_WORKFLOW_VERSION: ${{ steps.generate_version.outputs.version }}
+      run: |
+        cmd /c build.bat
+
+    - name: Create Release and Upload Asset
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: v${{ steps.generate_version.outputs.version }}
+        name: Release v${{ steps.generate_version.outputs.version }}
+        draft: false
+        prerelease: false
+        generate_release_notes: true
+        token: ${{ secrets.MY_TOKEN }}
+        files: api.exe
